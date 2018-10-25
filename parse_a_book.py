@@ -51,8 +51,8 @@ class WordNode():
 
 		new_right_node.rightword = self.rightword
 		self.rightword = new_right_node
-		print(new_right_node)
-		print("in new_right_node")
+		#print(new_right_node)
+		#print("in new_right_node")
 		if is_there_a_left_word:
 			if compare_left < new_right_node.word:
 				new_right_node.leftword = new_right_node.rightword.leftword
@@ -65,33 +65,26 @@ class WordNode():
 
 
 
-	def find_word(self, startnode, nodeword):  #The first time through this is passed the firstnode which has "may" and no children.
+	def add_node(self, startnode, nodeword):  #The first time through this is passed the firstnode which has "may" and no children.
 		if startnode.word == nodeword:  #if the node = the passed word, then add to the nodecount
 			startnode.wordcount += 1
+			#print("added 1 to " + nodeword)
 		elif nodeword < startnode.word:  # then it needs to go to the left
-			print("L72 Going Left with " + nodeword + " compared to " + startnode.word)
+			#print("L72 Going Left with " + nodeword + " compared to " + startnode.word)
 			if startnode.leftword == None: #check to see if there is a node on the left.  If not, add it there.
 				startnode.leftword = startnode.add_word(nodeword)
-				print("L75 added on the left - >" + nodeword)
-			elif startnode.leftword.word > nodeword:
-				newnode = self.add_word(nodeword)
-				print("L78 inserted leftnode wiht -> " + nodeword)
-				self.insert_left_node(newnode)
-
-			else:
-				print("L81 Calling findword recursively with -> " + nodeword)
-				self.find_word(startnode.leftword, nodeword)
+				#print("L75 added on the left - >" + nodeword)
+			else: #Go Left
+			 	self.add_node(startnode.leftword, nodeword)
+				
 		else:
-			print("L83 Going right! with " + nodeword + " compared to " + startnode.word)
+			#print("L83 Going right! with " + nodeword + " compared to " + startnode.word)
 			if startnode.rightword == None:
 				startnode.rightword = startnode.add_word(nodeword)
-				print("L86 added on the right -> " + nodeword)
-			elif startnode.rightword.word < nodeword:
-				newnode = WordNode(nodeword)
-				self.insert_right_node(newnode)
+				#print("L86 added on the right -> " + nodeword)
+			else: #Go rigth
+			 	self.add_node(startnode.rightword, nodeword)
 				
-			else:
-				self.find_word(startnode.rightword, nodeword)			
 
 
 def traverse_word_tree(firstnode):
@@ -106,13 +99,13 @@ def traverse_word_tree(firstnode):
 
 def find_a_word(firstnode, word):
 	if firstnode.word == word:
-		print(word + " appears " + str(firstnode.wordcount))
+		print(word + " appears (in ==) " + str(firstnode.wordcount) + " times")
 		return
 	if firstnode.leftword != None and firstnode.leftword.word == word: 
-		print(word + " appears " + str(firstnode.wordcount))
+		print(word + " appears (in leftword)" + str(firstnode.leftword.wordcount) + " times")
 		return
 	elif firstnode.rightword != None and firstnode.rightword.word == word:  #we're done here
-		print(word + " appears " + str(firstnode.wordcount))
+		print(word + " appears (in rightword)" + str(firstnode.rightword.wordcount) + " times")
 		return
 
 	if firstnode.leftword != None and firstnode.leftword.word <= word: #go right
@@ -121,7 +114,7 @@ def find_a_word(firstnode, word):
 				print(word + " doesn't exist")
 				return
 			else: #go left
-				print("in the else statement line 59")
+				#print("in the else statement line 59")
 				find_a_word(firstnode.leftword, word)
 				return
 
@@ -131,10 +124,12 @@ def find_a_word(firstnode, word):
 				find_a_word(firstnode.rightword, word)
 			else: #go left
 				find_a_word(firstnode.leftword, word)
+	elif firstnode.leftword != None:
+		print("going left with " + firstnode.leftword.word  + " searching for " + word)
+		find_a_word(firstnode.leftword, word)
 	else:
-		if firstnode.leftword != None:
-			print("going left with " + firstnode.leftword.word  + " searching for " + word)
-			find_a_word(firstnode.leftword, word)
+		print("Word not found")
+		return
 
 
 		
@@ -190,15 +185,24 @@ for oneword in words_list:
 		if char in valid_string:
 			newstring += char
 	charcount += 1
-	print(charcount)
-	print("Calling find_word with " + newstring)		
-	firstnode.find_word(firstnode, newstring.lower())
+	#print(charcount)
+	#print("Calling add_node with " + newstring)		
+	firstnode.add_node(firstnode, newstring.lower())
 
 
 #for i in range(1,20):
 #	print(words_list[i])
 
-
-
-#find_a_word(firstnode, "whale")
 traverse_word_tree(firstnode)
+
+active = True
+
+while active:
+	search_term = input("What word would you like to find? ")
+	if search_term == "quit":
+		active = False
+	else:
+		find_a_word(firstnode, search_term.lower())
+		print("\n")
+
+
