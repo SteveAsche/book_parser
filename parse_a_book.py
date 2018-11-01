@@ -101,35 +101,16 @@ def find_a_word(firstnode, word):
 	if firstnode.word == word:
 		print(word + " appears (in ==) " + str(firstnode.wordcount) + " times")
 		return
-	if firstnode.leftword != None and firstnode.leftword.word == word: 
-		print(word + " appears (in leftword)" + str(firstnode.leftword.wordcount) + " times")
-		return
-	elif firstnode.rightword != None and firstnode.rightword.word == word:  #we're done here
-		print(word + " appears (in rightword)" + str(firstnode.rightword.wordcount) + " times")
-		return
-
-	if firstnode.leftword != None and firstnode.leftword.word <= word: #go right
-		if firstnode.rightword != None and firstnode.rightword.word > word: # it doesn't exist
-			if firstnode.leftword == None:
-				print(word + " doesn't exist")
-				return
-			else: #go left
-				#print("in the else statement line 59")
-				find_a_word(firstnode.leftword, word)
-				return
-
-		else:
-			if firstnode.rightword != None:
-				print("going right with " + firstnode.rightword.word + " searching for " + word)
-				find_a_word(firstnode.rightword, word)
-			else: #go left
-				find_a_word(firstnode.leftword, word)
-	elif firstnode.leftword != None:
-		print("going left with " + firstnode.leftword.word  + " searching for " + word)
+	if firstnode.leftword != None and word < firstnode.word: # Go Left
 		find_a_word(firstnode.leftword, word)
-	else:
-		print("Word not found")
 		return
+	elif firstnode.rightword != None and word > firstnode.word:  #Go right
+		find_a_word(firstnode.rightword, word)
+		return
+	else: #There is not match
+		print("Therre is no match for " + word)
+		return
+
 
 
 		
@@ -167,7 +148,7 @@ def count_words(filename):
 
 #filenames = ["Alice.txt", "moby_dick.txt", "little_women.txt", "siddhartha.txt"]
 words_list = []
-filename = "Alice-short.txt"
+filename = "Alice.txt"
 words_list = count_words(filename)
 valid_string = "abcdefghijlmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "'"
 firstnode = WordNode("may")
