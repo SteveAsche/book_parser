@@ -99,7 +99,7 @@ def traverse_word_tree(firstnode):
 
 def find_a_word(firstnode, word):
 	if firstnode.word == word:
-		print(word + " appears (in ==) " + str(firstnode.wordcount) + " times")
+		print(word + " appears " + str(firstnode.wordcount) + " times")
 		return
 	if firstnode.leftword != None and word < firstnode.word: # Go Left
 		find_a_word(firstnode.leftword, word)
@@ -108,7 +108,7 @@ def find_a_word(firstnode, word):
 		find_a_word(firstnode.rightword, word)
 		return
 	else: #There is not match
-		print("Therre is no match for " + word)
+		print("There is no match for " + word)
 		return
 
 
@@ -148,7 +148,7 @@ def count_words(filename):
 
 #filenames = ["Alice.txt", "moby_dick.txt", "little_women.txt", "siddhartha.txt"]
 words_list = []
-filename = "Alice.txt"
+filename = "moby_dick.txt"
 words_list = count_words(filename)
 valid_string = "abcdefghijlmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "'"
 firstnode = WordNode("may")
@@ -180,7 +180,7 @@ active = True
 
 while active:
 	search_term = input("What word would you like to find? ")
-	if search_term == "quit":
+	if search_term == "gonow":
 		active = False
 	else:
 		find_a_word(firstnode, search_term.lower())
